@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bluechip Doc AI</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <style>
+    body {
+      background-color: #87dce2;
+    }
+    .card {
+      background-color: #87dce2;
+      border: 1px solid white;
+    }
+    h1{
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: bold;
+      font-size: 50px;
+    }
+    .logo-title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .logo-title img {
+      margin-right: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="logo-title">
+      <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Company Logo" width="60" height="60">
+      <h1 class="text-center text-secondary mb-4">Bluechip Doc AI</h1>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <form action="/chatbot" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="input_type">Choose input type:</label>
+            <select class="form-control" id="input_type" name="input_type">
+              <option value="url">URL</option>
+              <option value="pdf">PDF</option>
+            </select>
+          </div>
+          <div id="url_input" class="form-group">
+            <label for="url">Enter a URL:</label>
+            <input type="text" class="form-control" id="url" name="url" value="">
+          </div>
+          <div id="pdf_input" style="display: none;" class="form-group">
+            <label for="pdf_file">Upload a PDF file:</label>
+            <input type="file" class="form-control-file" id="pdf_file" name="pdf_file" accept=".pdf">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const urlInput = document.querySelector('#url_input');
+    const pdfInput = document.querySelector('#pdf_input');
+    const inputTypeSelect = document.querySelector('#input_type');
+
+    inputTypeSelect.addEventListener('change', function(event) {
+      if (event.target.value === 'url') {
+        urlInput.style.display = 'block';
+        pdfInput.style.display = 'none';
+      } else {
+        urlInput.style.display = 'none';
+        pdfInput.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

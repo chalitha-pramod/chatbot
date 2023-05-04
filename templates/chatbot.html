@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bluechip Doc AI</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <style>
+    body {
+      background-color: #87dce2;
+    }
+    .card {
+      background-color: #87dce2;
+      border: 1px solid white;
+    }
+    h1{
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: bold;
+      font-size: 50px;
+    }
+    .logo-title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .logo-title img {
+      margin-right: 15px;
+    }
+    .you-icon, .bluechip-icon {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="logo-title">
+      <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Company Logo" width="60" height="60">
+      <h1 class="text-center text-secondary mb-4">Bluechip Doc AI</h1>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="form-group">
+          <label for="msg">Ask a question:</label>
+          <input type="text" class="form-control" id="msg" name="msg" value="">
+        </div>
+        <button id="submit_msg" class="btn btn-primary">Send</button>
+      </div>
+    </div>
+    <div id="chatbot" class="container mt-5"></div>
+
+    <div class="container mt-3">
+      <a href="/" class="btn btn-secondary">Back to Home Page</a>
+    </div>
+  </div>
+
+  <script>
+    const submitMsgBtn = document.querySelector('#submit_msg');
+    submitMsgBtn.addEventListener('click', async function() {
+      const msg = document.querySelector('#msg').value;
+      let response;
+
+      if ('{{ input_type }}' === 'url') {
+        const url = '{{ url }}';
+        response = await fetch(`/get?url=${url}&msg=${msg}`);
+      } else {
+        const formData = new FormData();
+        formData.append('msg', msg);
+
+        response = await fetch('/get_pdf', {
+          method: 'POST',
+          body: formData
+        });
+      }
+
+      const data = await response.text();
+      const chatbot = document.querySelector('#chatbot');
+      chatbot.innerHTML += `<div class="row mb-2"><div class="col-12 bg-light p-2 rounded"><p class="mb-0"><img src="{{ url_for('static', filename='images/you.png') }}" alt="You Icon" class="you-icon" width="40" height="30"><b>You:</b> ${msg}</p></div></div>`;
+      chatbot.innerHTML += `<div class="row mb-2"><div class="col-12 bg-info text-white p-2 rounded"><p class="mb-0"><img src="{{ url_for('static', filename='images/chatbot.png') }}" alt="chatbot-icon" class="bluechip-icon" width="40" height="40"><b>Bluechip Doc AI:</b> ${data}</p></div></div>`;
+
+    });
+  </script>
+</body>
+</html>
